@@ -2,17 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterapp/friendly_chat.dart';
+import 'package:flutterapp/list_screen.dart';
 import 'package:flutterapp/register.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:async';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:math';
-import 'dart:io';
 
 final ThemeData kIOSTheme = new ThemeData(
   primarySwatch: Colors.orange,
@@ -44,6 +35,7 @@ class FlutterApp extends StatelessWidget {
         '/home': (BuildContext context) => new FlutterApp(),
         '/chat': (BuildContext context) => new FriendlyChat(),
         '/register': (BuildContext context) => new Register(),
+        '/list': (BuildContext context) => new ListPage(),
       },
     );
   }
@@ -58,51 +50,38 @@ class AppScreen extends StatefulWidget {
 
 class AppScreenState extends State<AppScreen>
     with SingleTickerProviderStateMixin {
+  TabController controller;
+
   @override
   Widget build(BuildContext context) {
-    Widget buttonSection = new Container(
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          buildButtonColumn(Icons.chat, "Chat", () {
-            Navigator
-                .pushNamed(context, '/chat');
-          }),
-          buildButtonColumn(Icons.info, "Register", () {
-            Navigator.pushNamed(context, '/register');
-          })
-        ],
-      ),
-    );
     Widget home = new Scaffold(
-      appBar: buildAppBar("Home"),
-      body: buttonSection,
+        appBar: buildAppBar('Playground'),
+        bottomNavigationBar: new TabBar(
+            controller: controller,
+            tabs: <Tab>[
+              new Tab(icon: new Icon(Icons.info, size: 30.0)),
+              new Tab(icon: new Icon(Icons.list, size: 30.0)),
+              new Tab(icon: new Icon(Icons.chat, size: 30.0)),
+            ]),
+        body: new TabBarView(controller: controller, children: <Widget>[
+          new RegisterScreen(),
+          new ListScreen(),
+          new ChatScreen()
+        ])
     );
     return home;
   }
 
-  Column buildButtonColumn(IconData icon, String label, VoidCallback callback) {
-    Color color = defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme
-        .accentColor : kDefaultTheme.accentColor;
-    return new Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        new IconButton(
-            icon: new Icon(icon, color: color,), onPressed: callback),
-        new Container(
-          margin: const EdgeInsets.only(top: 2.0),
-          child: new Text(
-            label,
-            style: new TextStyle(
-              fontSize: 12.0,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
-          ),
-        )
-      ],
-    );
+  @override
+  void initState() {
+    super.initState();
+    controller = new TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
   }
 
   buildAppBar(String title) {
@@ -116,7 +95,7 @@ class AppScreenState extends State<AppScreen>
                 icon: new Icon(Icons.arrow_back_ios), onPressed: () {
               Navigator.pop(context);
             }),*/
-            new Text(title != null ? title : "Flutter App"),
+            new Text(title != null ? title : 'Flutter App'),
           ],
         ),
       ),

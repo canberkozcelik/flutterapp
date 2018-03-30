@@ -134,7 +134,7 @@ class RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
         key: _scaffoldKey,
-        appBar: buildAppBar("Register"),
+//        appBar: buildAppBar("Register"),
         body: new SafeArea(
             top: false,
             bottom: false,

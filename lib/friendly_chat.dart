@@ -68,7 +68,7 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: buildAppBar("Chat"),
+//      appBar: buildAppBar("Chat"),
       body: new Container(
           child: new Column(
             children: <Widget>[
