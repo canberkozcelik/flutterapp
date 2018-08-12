@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -253,4 +254,4 @@ class ChatMessage extends StatelessWidget {
       ),
     );
   }
-}
+}*/
